@@ -1,0 +1,27 @@
+﻿version: '3'
+services:
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 123456  # Đổi nếu muốn
+      POSTGRES_DB: casdoor
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  casdoor:
+    image: casbin/casdoor:latest
+    restart: always
+    ports:
+      - "8001:8000"
+    depends_on:
+      - db
+    environment:
+      RUNNING_IN_DOCKER: "true"
+    volumes:
+      - ./conf:/conf/  # Tạo thư mục conf nếu cần config tùy chỉnh
+
+volumes:
+  postgres_data:
